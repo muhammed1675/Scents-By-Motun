@@ -91,9 +91,8 @@
 
 .announcement-scroll {
   display: inline-block;
-  animation: scroll-left 20s linear infinite;
+  animation: scroll-left 35s linear infinite;
   white-space: nowrap;
-  padding-right: 2rem;
 }
 
 .announcement-banner {
