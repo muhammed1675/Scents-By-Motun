@@ -42,9 +42,11 @@ export function Header() {
   return (
     <>
     <header className="sticky top-0 z-40 bg-ivory/95 backdrop-blur">
-      <p className="bg-cocoa px-4 py-2 text-center text-[11px] uppercase tracking-widest text-ivory">
-        Free delivery in Lagos on orders over ₦100,000
-      </p>
+      <div className="announcement-banner bg-cocoa py-2 px-4">
+        <p className="announcement-scroll text-[11px] uppercase tracking-widest text-ivory">
+          Free delivery in Lagos on orders over ₦100,000
+        </p>
+      </div>
 
       <div className="border-b border-cocoa/10">
         <div className="container flex items-center justify-between gap-4 py-3.5">

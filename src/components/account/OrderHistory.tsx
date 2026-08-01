@@ -35,13 +35,13 @@ export function OrderHistory() {
   }
 
   return (
-    <ul className="space-y-4">
+    <div className="space-y-6">
       {orders.map((order) =>
-      <li
+      <div
         key={order.id}
         className="rounded-sm border border-cocoa/10 bg-white p-5">
         
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-cocoa/10 pb-4">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-cocoa/10 pb-4">
             <div>
               <p className="font-medium text-ink">{order.reference}</p>
               <p className="text-xs text-cocoa/60">
@@ -49,32 +49,72 @@ export function OrderHistory() {
                 {order.paymentMethod === 'whatsapp' ? 'WhatsApp' : 'Paid online'}
               </p>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="text-right">
               <StatusBadge status={order.status} />
-              <span className="font-semibold text-cocoa">
-                {formatNaira(order.total)}
-              </span>
             </div>
           </div>
-          <ul className="mt-4 space-y-3">
-            {order.items.map((item) =>
-          <li key={item.productId} className="flex items-center gap-3">
-                <img
-              src={item.image}
-              alt=""
-              className="h-14 w-12 rounded-sm object-cover" />
-            
-                <div className="flex-1">
-                  <p className="text-sm text-ink">{item.name}</p>
-                  <p className="text-xs text-cocoa/60">
-                    ×{item.quantity} · {formatNaira(item.price)}
-                  </p>
+
+          <div className="mb-4">
+            <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-chestnut">Order Details</h3>
+            <div className="overflow-x-auto rounded-sm border border-cocoa/10">
+              <table className="w-full text-sm">
+                <tbody>
+                  {order.items.map((item) =>
+                  <tr key={item.productId} className="border-b border-cocoa/10 last:border-b-0">
+                    <td className="px-3 py-2">
+                      <img
+                        src={item.image}
+                        alt=""
+                        className="h-12 w-10 rounded-sm object-cover" />
+                    </td>
+                    <td className="px-3 py-2">
+                      <p className="text-ink">{item.name}</p>
+                    </td>
+                    <td className="px-3 py-2 text-right text-cocoa/60">
+                      ×{item.quantity}
+                    </td>
+                    <td className="px-3 py-2 text-right font-medium text-ink">
+                      {formatNaira(item.price)}
+                    </td>
+                  </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="mb-4">
+            <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-chestnut">Payment Summary</h3>
+            <div className="space-y-1.5 rounded-sm bg-cocoa/5 p-3">
+              <div className="flex justify-between text-sm">
+                <span className="text-cocoa/60">Subtotal</span>
+                <span className="text-ink">{formatNaira(order.subtotal)}</span>
+              </div>
+              {order.discount > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-cocoa/60">Discount</span>
+                  <span className="text-[#2F5D3A]">-{formatNaira(order.discount)}</span>
                 </div>
-              </li>
-          )}
-          </ul>
-        </li>
+              )}
+              <div className="flex justify-between text-sm">
+                <span className="text-cocoa/60">Shipping</span>
+                <span className="text-ink">{formatNaira(order.shippingFee)}</span>
+              </div>
+              <div className="border-t border-cocoa/10 pt-1.5 flex justify-between font-semibold">
+                <span className="text-ink">Total</span>
+                <span className="text-ink">{formatNaira(order.total)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-sm bg-cocoa/5 p-3">
+            <p className="text-xs font-semibold uppercase tracking-widest text-chestnut mb-1">Payment Status</p>
+            <p className="text-sm text-ink font-medium">
+              {order.paymentMethod === 'whatsapp' ? '💬 Awaiting WhatsApp confirmation' : '✓ Payment confirmed'}
+            </p>
+          </div>
+        </div>
       )}
-    </ul>);
+    </div>);
 
 }

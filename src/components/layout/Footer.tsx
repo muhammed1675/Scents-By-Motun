@@ -82,11 +82,6 @@ export function Footer() {
                 My bag
               </Link>
             </li>
-            <li>
-              <Link to="/admin" className="hover:text-gold">
-                Admin dashboard
-              </Link>
-            </li>
           </ul>
         </nav>
 

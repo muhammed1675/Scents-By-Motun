@@ -78,3 +78,24 @@
     scrollbar-width: none;
   }
 }
+
+/* Announcement banner scroll animation */
+@keyframes scroll-left {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.announcement-scroll {
+  display: inline-block;
+  animation: scroll-left 20s linear infinite;
+  white-space: nowrap;
+  padding-right: 2rem;
+}
+
+.announcement-banner {
+  overflow: hidden;
+}

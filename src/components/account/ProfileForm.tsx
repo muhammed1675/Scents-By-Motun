@@ -9,7 +9,11 @@ export function ProfileForm() {
   const [values, setValues] = useState({
     fullName: user?.fullName ?? '',
     email: user?.email ?? '',
-    phone: user?.phone ?? ''
+    phone: user?.phone ?? '',
+    street: user?.addresses?.[0]?.street ?? '',
+    city: user?.addresses?.[0]?.city ?? '',
+    state: user?.addresses?.[0]?.state ?? '',
+    country: user?.addresses?.[0]?.country ?? ''
   });
   const [isSaving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -58,6 +62,44 @@ export function ProfileForm() {
             required
             value={values.phone}
             onChange={(e) => set('phone', e.target.value)} />
+          
+        </Field>
+
+        <h3 className="pt-2 font-medium text-ink">Delivery Address</h3>
+        
+        <Field label="Street address" htmlFor="profile-street" required>
+          <TextInput
+            id="profile-street"
+            required
+            value={values.street}
+            onChange={(e) => set('street', e.target.value)} />
+          
+        </Field>
+
+        <Field label="City" htmlFor="profile-city" required>
+          <TextInput
+            id="profile-city"
+            required
+            value={values.city}
+            onChange={(e) => set('city', e.target.value)} />
+          
+        </Field>
+
+        <Field label="State" htmlFor="profile-state" required>
+          <TextInput
+            id="profile-state"
+            required
+            value={values.state}
+            onChange={(e) => set('state', e.target.value)} />
+          
+        </Field>
+
+        <Field label="Country" htmlFor="profile-country" required>
+          <TextInput
+            id="profile-country"
+            required
+            value={values.country}
+            onChange={(e) => set('country', e.target.value)} />
           
         </Field>
       </div>

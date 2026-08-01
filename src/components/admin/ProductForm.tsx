@@ -24,6 +24,14 @@ export const emptyProduct: ProductDraft = {
   reviewCount: 0
 };
 
+const COLLECTION_LINES = [
+  'Signature Collection',
+  'Premium Line',
+  'Limited Edition',
+  'Seasonal Collection',
+  'Exclusive Blend'
+];
+
 interface ProductFormProps {
   draft: ProductDraft;
   categories: Category[];
@@ -40,6 +48,9 @@ export function ProductForm({
   onSubmit
 }: ProductFormProps) {
   const [imagesText, setImagesText] = useState(draft.images.join('\n'));
+  const [topNotesText, setTopNotesText] = useState(draft.notes.top.join(', '));
+  const [heartNotesText, setHeartNotesText] = useState(draft.notes.heart.join(', '));
+  const [baseNotesText, setBaseNotesText] = useState(draft.notes.base.join(', '));
 
   function set<K extends keyof ProductDraft>(key: K, value: ProductDraft[K]) {
     onChange({ ...draft, [key]: value });
@@ -50,6 +61,36 @@ export function ProductForm({
     draft.categorySlugs.filter((s) => s !== slug) :
     [...draft.categorySlugs, slug];
     set('categorySlugs', next);
+  }
+
+  function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files || []).slice(0, 3);
+    const imageUrls = files.map(file => URL.createObjectURL(file));
+    set('images', imageUrls);
+  }
+
+  function updateTopNotes(text: string) {
+    setTopNotesText(text);
+    set('notes', {
+      ...draft.notes,
+      top: text.split(',').map(s => s.trim()).filter(Boolean)
+    });
+  }
+
+  function updateHeartNotes(text: string) {
+    setHeartNotesText(text);
+    set('notes', {
+      ...draft.notes,
+      heart: text.split(',').map(s => s.trim()).filter(Boolean)
+    });
+  }
+
+  function updateBaseNotes(text: string) {
+    setBaseNotesText(text);
+    set('notes', {
+      ...draft.notes,
+      base: text.split(',').map(s => s.trim()).filter(Boolean)
+    });
   }
 
   return (
@@ -71,12 +112,19 @@ export function ProductForm({
           
         </Field>
 
-        <Field label="Collection line" htmlFor="p-line">
-          <TextInput
+        <Field label="Collection line" htmlFor="p-line" required>
+          <SelectInput
             id="p-line"
+            required
             value={draft.brandLine}
-            onChange={(e) => set('brandLine', e.target.value)} />
-          
+            onChange={(e) => set('brandLine', e.target.value)}>
+            
+            {COLLECTION_LINES.map((line) =>
+            <option key={line} value={line}>
+                {line}
+              </option>
+            )}
+          </SelectInput>
         </Field>
 
         <Field label="Size" htmlFor="p-size">
@@ -157,28 +205,69 @@ export function ProductForm({
         </Field>
 
         <Field
-          label="Image URLs"
+          label="Product images"
           htmlFor="p-images"
-          hint="One URL per line. The first image is the cover."
+          hint="Upload up to 3 images. First image is the cover."
           className="sm:col-span-2">
           
-          <TextArea
+          <input
             id="p-images"
-            rows={3}
-            value={imagesText}
-            onChange={(e) => {
-              setImagesText(e.target.value);
-              set(
-                'images',
-                e.target.value.
-                split('\n').
-                map((s) => s.trim()).
-                filter(Boolean)
-              );
-            }} />
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleImageUpload}
+            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-sm file:border-0 file:text-sm file:font-semibold file:bg-cocoa/10 file:text-cocoa hover:file:bg-cocoa/20" />
           
+          {draft.images.length > 0 && (
+            <div className="mt-2 flex gap-2">
+              {draft.images.map((img, idx) => (
+                <div key={idx} className="relative">
+                  <img src={img} alt={`Preview ${idx + 1}`} className="h-20 w-20 rounded object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => set('images', draft.images.filter((_, i) => i !== idx))}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </Field>
       </div>
+
+      <fieldset className="space-y-3">
+        <legend className="mb-3 text-xs font-medium uppercase tracking-widest text-chestnut">
+          Fragrance Notes
+        </legend>
+        
+        <Field label="Top notes" htmlFor="p-top-notes" hint="Comma-separated (e.g., Bergamot, Lemon, Pink Pepper)">
+          <TextInput
+            id="p-top-notes"
+            placeholder="Enter top notes separated by commas"
+            value={topNotesText}
+            onChange={(e) => updateTopNotes(e.target.value)} />
+          
+        </Field>
+
+        <Field label="Heart notes" htmlFor="p-heart-notes" hint="Comma-separated (e.g., Jasmine, Rose, Vanilla)">
+          <TextInput
+            id="p-heart-notes"
+            placeholder="Enter heart notes separated by commas"
+            value={heartNotesText}
+            onChange={(e) => updateHeartNotes(e.target.value)} />
+          
+        </Field>
+
+        <Field label="Base notes" htmlFor="p-base-notes" hint="Comma-separated (e.g., Sandalwood, Musk, Oud)">
+          <TextInput
+            id="p-base-notes"
+            placeholder="Enter base notes separated by commas"
+            value={baseNotesText}
+            onChange={(e) => updateBaseNotes(e.target.value)} />
+          
+        </Field>
+      </fieldset>
 
       <fieldset>
         <legend className="mb-3 text-xs font-medium uppercase tracking-widest text-chestnut">
