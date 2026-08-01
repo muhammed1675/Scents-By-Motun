@@ -44,7 +44,7 @@ export function Header() {
     <header className="sticky top-0 z-40 bg-ivory/95 backdrop-blur">
       <div className="announcement-banner bg-cocoa py-2 px-4">
         <p className="announcement-scroll text-[11px] uppercase tracking-widest text-ivory">
-          Free delivery in Lagos on orders over ₦100,000
+          Free delivery in Lagos on orders over ₦100,000 - Experience Luxury, Support Local - Track Your Order in Real-Time
         </p>
       </div>
 
