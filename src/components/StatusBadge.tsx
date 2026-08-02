@@ -1,5 +1,5 @@
 import React from 'react';
-import { OrderStatus, TestimonialStatus } from '../types';
+import { OrderStatus, PaymentStatus, TestimonialStatus } from '../types';
 import { cn } from '../utils/format';
 
 type Tone = 'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'gold';
@@ -27,8 +27,22 @@ const testimonialTones: Record<TestimonialStatus, Tone> = {
   rejected: 'danger'
 };
 
+const paymentTones: Record<PaymentStatus, Tone> = {
+  unpaid: 'warning',
+  awaiting_confirmation: 'info',
+  paid: 'success',
+  refunded: 'danger'
+};
+
+const paymentLabels: Record<PaymentStatus, string> = {
+  unpaid: 'Payment pending',
+  awaiting_confirmation: 'Awaiting confirmation',
+  paid: 'Paid',
+  refunded: 'Refunded'
+};
+
 interface StatusBadgeProps {
-  status: OrderStatus | TestimonialStatus | string;
+  status: OrderStatus | TestimonialStatus | PaymentStatus | string;
   tone?: Tone;
   className?: string;
 }
@@ -38,7 +52,10 @@ export function StatusBadge({ status, tone, className }: StatusBadgeProps) {
   tone ??
   orderTones[status as OrderStatus] ??
   testimonialTones[status as TestimonialStatus] ??
+  paymentTones[status as PaymentStatus] ??
   'neutral';
+
+  const label = paymentLabels[status as PaymentStatus] ?? status;
 
   return (
     <span
@@ -48,7 +65,7 @@ export function StatusBadge({ status, tone, className }: StatusBadgeProps) {
         className
       )}>
       
-      {status}
+      {label}
     </span>);
 
 }

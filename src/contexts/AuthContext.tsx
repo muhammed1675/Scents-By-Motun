@@ -12,6 +12,7 @@ import {
   login as loginService,
   logout as logoutService,
   signup as signupService,
+  SignupAddress,
   updateProfile as updateProfileService } from
 '../services';
 
@@ -24,6 +25,7 @@ interface AuthContextValue {
     email: string;
     phone: string;
     password: string;
+    address?: SignupAddress;
   }) => Promise<{ok: boolean;message?: string;}>;
   logout: () => Promise<void>;
   updateProfile: (patch: Partial<User>) => Promise<void>;
@@ -54,6 +56,7 @@ export function AuthProvider({ children }: {children: React.ReactNode;}) {
       email: string;
       phone: string;
       password: string;
+      address?: SignupAddress;
     }) => {
       const result = await signupService(input);
       if (result.ok && result.user) setUser(result.user);

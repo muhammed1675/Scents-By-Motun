@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { Loader2, Upload, X } from 'lucide-react';
 import { Category, Product } from '../../types';
 import { Checkbox, Field, SelectInput, TextArea, TextInput } from '../ui/Field';
+import { adminApi } from '../../services';
 
 export type ProductDraft = Omit<Product, 'id' | 'slug'> & {
   id?: string;
@@ -24,13 +26,23 @@ export const emptyProduct: ProductDraft = {
   reviewCount: 0
 };
 
+const MAX_IMAGES = 3;
+
+// Known collection lines used across the catalogue. If a product being
+// edited has a custom value not in this list, it's added on the fly below
+// so existing data is never silently dropped.
 const COLLECTION_LINES = [
-  'Signature Collection',
-  'Premium Line',
-  'Limited Edition',
-  'Seasonal Collection',
-  'Exclusive Blend'
-];
+'Signature Collection',
+'Designer',
+'Everyday',
+'City Series',
+'Oil Collection',
+'Combo',
+'Gifting',
+'Home',
+'Miniatures',
+'Archive'];
+
 
 interface ProductFormProps {
   draft: ProductDraft;
@@ -47,10 +59,8 @@ export function ProductForm({
   formId,
   onSubmit
 }: ProductFormProps) {
-  const [imagesText, setImagesText] = useState(draft.images.join('\n'));
-  const [topNotesText, setTopNotesText] = useState(draft.notes.top.join(', '));
-  const [heartNotesText, setHeartNotesText] = useState(draft.notes.heart.join(', '));
-  const [baseNotesText, setBaseNotesText] = useState(draft.notes.base.join(', '));
+  const [uploading, setUploading] = useState<boolean[]>([false, false, false]);
+  const [uploadError, setUploadError] = useState('');
 
   function set<K extends keyof ProductDraft>(key: K, value: ProductDraft[K]) {
     onChange({ ...draft, [key]: value });
@@ -63,35 +73,33 @@ export function ProductForm({
     set('categorySlugs', next);
   }
 
-  function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(e.target.files || []).slice(0, 3);
-    const imageUrls = files.map(file => URL.createObjectURL(file));
-    set('images', imageUrls);
+  async function handleFileSelect(index: number, file: File | undefined) {
+    if (!file) return;
+    setUploadError('');
+    setUploading((u) => u.map((v, i) => i === index ? true : v));
+    try {
+      const url = await adminApi.uploadProductImage(file);
+      const next = [...draft.images];
+      while (next.length <= index) next.push('');
+      next[index] = url;
+      set('images', next.filter(Boolean));
+    } catch (err) {
+      setUploadError(
+        err instanceof Error ? err.message : 'Could not upload that image.'
+      );
+    } finally {
+      setUploading((u) => u.map((v, i) => i === index ? false : v));
+    }
   }
 
-  function updateTopNotes(text: string) {
-    setTopNotesText(text);
-    set('notes', {
-      ...draft.notes,
-      top: text.split(',').map(s => s.trim()).filter(Boolean)
-    });
+  function removeImage(index: number) {
+    set('images', draft.images.filter((_, i) => i !== index));
   }
 
-  function updateHeartNotes(text: string) {
-    setHeartNotesText(text);
-    set('notes', {
-      ...draft.notes,
-      heart: text.split(',').map(s => s.trim()).filter(Boolean)
-    });
-  }
-
-  function updateBaseNotes(text: string) {
-    setBaseNotesText(text);
-    set('notes', {
-      ...draft.notes,
-      base: text.split(',').map(s => s.trim()).filter(Boolean)
-    });
-  }
+  const lineOptions =
+  draft.brandLine && !COLLECTION_LINES.includes(draft.brandLine) ?
+  [draft.brandLine, ...COLLECTION_LINES] :
+  COLLECTION_LINES;
 
   return (
     <form
@@ -112,14 +120,13 @@ export function ProductForm({
           
         </Field>
 
-        <Field label="Collection line" htmlFor="p-line" required>
+        <Field label="Collection line" htmlFor="p-line">
           <SelectInput
             id="p-line"
-            required
             value={draft.brandLine}
             onChange={(e) => set('brandLine', e.target.value)}>
             
-            {COLLECTION_LINES.map((line) =>
+            {lineOptions.map((line) =>
             <option key={line} value={line}>
                 {line}
               </option>
@@ -206,68 +213,70 @@ export function ProductForm({
 
         <Field
           label="Product images"
-          htmlFor="p-images"
-          hint="Upload up to 3 images. First image is the cover."
+          htmlFor="p-image-0"
+          hint={`Upload up to ${MAX_IMAGES} photos. The first is the cover image.`}
+          error={uploadError}
           className="sm:col-span-2">
           
-          <input
-            id="p-images"
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleImageUpload}
-            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-sm file:border-0 file:text-sm file:font-semibold file:bg-cocoa/10 file:text-cocoa hover:file:bg-cocoa/20" />
-          
-          {draft.images.length > 0 && (
-            <div className="mt-2 flex gap-2">
-              {draft.images.map((img, idx) => (
-                <div key={idx} className="relative">
-                  <img src={img} alt={`Preview ${idx + 1}`} className="h-20 w-20 rounded object-cover" />
-                  <button
-                    type="button"
-                    onClick={() => set('images', draft.images.filter((_, i) => i !== idx))}
-                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
-                    ×
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
+          <div className="grid grid-cols-3 gap-3">
+            {Array.from({ length: MAX_IMAGES }).map((_, i) => {
+              const url = draft.images[i];
+              return (
+                <div
+                  key={i}
+                  className="relative aspect-square overflow-hidden rounded-sm border border-dashed border-cocoa/25 bg-cream">
+                  
+                  {url ?
+                  <>
+                      <img src={url} alt="" className="h-full w-full object-cover" />
+                      <button
+                      type="button"
+                      onClick={() => removeImage(i)}
+                      aria-label="Remove image"
+                      className="absolute right-1.5 top-1.5 grid h-6 w-6 place-items-center rounded-full bg-ink/70 text-ivory hover:bg-ink">
+                      
+                        <X size={13} />
+                      </button>
+                      {i === 0 &&
+                    <span className="absolute left-1.5 top-1.5 bg-cocoa px-1.5 py-0.5 text-[9px] uppercase tracking-widest text-ivory">
+                          Cover
+                        </span>
+                    }
+                    </> :
+
+                  <label
+                    htmlFor={`p-image-${i}`}
+                    className="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-1 text-cocoa/50 transition hover:text-cocoa">
+                    
+                      {uploading[i] ?
+                    <Loader2 size={18} className="animate-spin" /> :
+
+                    <>
+                          <Upload size={18} />
+                          <span className="text-[10px] uppercase tracking-widest">
+                            Upload
+                          </span>
+                        </>
+                    }
+                      <input
+                      id={`p-image-${i}`}
+                      type="file"
+                      accept="image/*"
+                      className="sr-only"
+                      disabled={uploading[i]}
+                      onChange={(e) => {
+                        handleFileSelect(i, e.target.files?.[0]);
+                        e.target.value = '';
+                      }} />
+                    
+                    </label>
+                  }
+                </div>);
+
+            })}
+          </div>
         </Field>
       </div>
-
-      <fieldset className="space-y-3">
-        <legend className="mb-3 text-xs font-medium uppercase tracking-widest text-chestnut">
-          Fragrance Notes
-        </legend>
-        
-        <Field label="Top notes" htmlFor="p-top-notes" hint="Comma-separated (e.g., Bergamot, Lemon, Pink Pepper)">
-          <TextInput
-            id="p-top-notes"
-            placeholder="Enter top notes separated by commas"
-            value={topNotesText}
-            onChange={(e) => updateTopNotes(e.target.value)} />
-          
-        </Field>
-
-        <Field label="Heart notes" htmlFor="p-heart-notes" hint="Comma-separated (e.g., Jasmine, Rose, Vanilla)">
-          <TextInput
-            id="p-heart-notes"
-            placeholder="Enter heart notes separated by commas"
-            value={heartNotesText}
-            onChange={(e) => updateHeartNotes(e.target.value)} />
-          
-        </Field>
-
-        <Field label="Base notes" htmlFor="p-base-notes" hint="Comma-separated (e.g., Sandalwood, Musk, Oud)">
-          <TextInput
-            id="p-base-notes"
-            placeholder="Enter base notes separated by commas"
-            value={baseNotesText}
-            onChange={(e) => updateBaseNotes(e.target.value)} />
-          
-        </Field>
-      </fieldset>
 
       <fieldset>
         <legend className="mb-3 text-xs font-medium uppercase tracking-widest text-chestnut">

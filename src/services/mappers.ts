@@ -135,6 +135,7 @@ export function toOrder(row: any): Order {
     total: Number(row.total ?? 0),
     status: row.status,
     paymentMethod: row.payment_method,
+    paymentStatus: row.payment_status ?? (row.status === 'cancelled' ? 'refunded' : 'unpaid'),
     createdAt: row.created_at
   };
 }

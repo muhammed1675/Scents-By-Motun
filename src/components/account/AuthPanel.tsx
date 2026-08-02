@@ -13,7 +13,11 @@ export function AuthPanel() {
     fullName: '',
     email: '',
     phone: '',
-    password: ''
+    password: '',
+    street: '',
+    city: '',
+    state: '',
+    country: 'Nigeria'
   });
   const [error, setError] = useState('');
   const [isBusy, setBusy] = useState(false);
@@ -29,7 +33,18 @@ export function AuthPanel() {
     const result =
     mode === 'login' ?
     await login(values.email, values.password) :
-    await signup(values);
+    await signup({
+      fullName: values.fullName,
+      email: values.email,
+      phone: values.phone,
+      password: values.password,
+      address: {
+        street: values.street,
+        city: values.city,
+        state: values.state,
+        country: values.country
+      }
+    });
     setBusy(false);
     if (!result.ok) setError(result.message ?? 'Something went wrong.');
   }
@@ -84,6 +99,43 @@ export function AuthPanel() {
               onChange={(e) => set('phone', e.target.value)} />
             
             </Field>
+
+            <Field
+            label="Delivery address"
+            htmlFor="auth-street"
+            required
+            hint="Saved as your default address — you can edit or add more later.">
+            
+              <TextInput
+              id="auth-street"
+              required
+              value={values.street}
+              autoComplete="address-line1"
+              placeholder="Street address"
+              onChange={(e) => set('street', e.target.value)} />
+            
+            </Field>
+
+            <div className="grid grid-cols-2 gap-3">
+              <Field label="City" htmlFor="auth-city" required>
+                <TextInput
+                id="auth-city"
+                required
+                value={values.city}
+                autoComplete="address-level2"
+                onChange={(e) => set('city', e.target.value)} />
+              
+              </Field>
+              <Field label="State" htmlFor="auth-state" required>
+                <TextInput
+                id="auth-state"
+                required
+                value={values.state}
+                autoComplete="address-level1"
+                onChange={(e) => set('state', e.target.value)} />
+              
+              </Field>
+            </div>
           </>
         }
 

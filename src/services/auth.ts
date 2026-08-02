@@ -2,6 +2,13 @@ import { Address, Order, User } from '../types';
 import { supabase } from './supabase';
 import { toAddress, toOrder } from './mappers';
 
+export interface SignupAddress {
+  street: string;
+  city: string;
+  state: string;
+  country?: string;
+}
+
 async function loadAddresses(userId: string): Promise<Address[]> {
   const { data, error } = await supabase.
   from('addresses').
@@ -52,6 +59,7 @@ export async function signup(input: {
   email: string;
   phone: string;
   password: string;
+  address?: SignupAddress;
 }): Promise<{ok: boolean;message?: string;user?: User;}> {
   if (input.password.length < 6) {
     return { ok: false, message: 'Password must be at least 6 characters.' };
@@ -71,6 +79,24 @@ export async function signup(input: {
       message: 'Check your inbox to confirm your email, then sign in.'
     };
   }
+
+  // Address is optional — a signup shouldn't fail just because saving the
+  // address afterwards hit a snag, so this is best-effort.
+  if (input.address?.street && input.address.city && input.address.state) {
+    try {
+      await saveAddress({
+        label: 'Home',
+        street: input.address.street,
+        city: input.address.city,
+        state: input.address.state,
+        country: input.address.country || 'Nigeria',
+        isDefault: true
+      });
+    } catch {
+      // Ignored: the account still exists even if the address save failed.
+    }
+  }
+
   return { ok: true, user: await buildUser(data.user!) };
 }
 

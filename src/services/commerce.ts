@@ -158,7 +158,8 @@ export async function createOrder(input: {
     shipping_fee: shippingFee,
     total: cart.total + shippingFee,
     status: 'pending' as const,
-    payment_method: paymentMethod
+    payment_method: paymentMethod,
+    payment_status: paymentMethod === 'online' ? 'unpaid' as const : 'awaiting_confirmation' as const
   };
 
   const { data, error } = await supabase.

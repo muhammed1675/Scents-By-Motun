@@ -68,7 +68,11 @@ async function markPaid(reference: string, amountKobo: number | null) {
   if (order.status === 'pending') {
     await admin.
     from('orders').
-    update({ status: 'processing', payment_reference: reference }).
+    update({
+      status: 'processing',
+      payment_status: 'paid',
+      payment_reference: reference
+    }).
     eq('id', order.id);
   }
   return { ok: true };

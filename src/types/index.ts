@@ -74,6 +74,8 @@ export type OrderStatus =
 
 export type PaymentMethod = 'online' | 'whatsapp';
 
+export type PaymentStatus = 'unpaid' | 'paid' | 'awaiting_confirmation' | 'refunded';
+
 export interface Address {
   id: ID;
   label: string;
@@ -118,6 +120,7 @@ export interface Order {
   total: number;
   status: OrderStatus;
   paymentMethod: PaymentMethod;
+  paymentStatus: PaymentStatus;
   createdAt: string;
 }
 
