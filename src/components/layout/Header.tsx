@@ -44,7 +44,7 @@ export function Header() {
     <header className="sticky top-0 z-40 bg-ivory/95 backdrop-blur">
       <div className="announcement-banner bg-cocoa py-2 px-4">
         <p className="announcement-scroll text-[11px] uppercase tracking-widest text-ivory">
-          Free delivery in Lagos on orders over ₦100,000 • Track Your Order in Real-Time • Experience Luxury, Support Local
+          Free delivery in Ibadan on orders over ₦100,000 • Track Your Order in Real-Time • Experience Luxury, Support Local
         </p>
       </div>
 
@@ -64,7 +64,7 @@ export function Header() {
               Scent by Motun
             </span>
             <span className="text-[9px] font-medium uppercase tracking-widest text-chestnut">
-              Lagos · Nigeria
+              Ibadan · Nigeria
             </span>
           </Link>
 
