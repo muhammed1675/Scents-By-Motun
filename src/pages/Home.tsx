@@ -24,7 +24,7 @@ const STORY = "/5f02c4d8-2d05-4ddf-9d67-ad69c683aa03.jpg";
 const promises = [
 {
   icon: Sparkles,
-  title: 'Blended in Lagos',
+  title: 'Blended in Ibadan',
   text: 'Small-batch compositions made with imported and locally sourced oils.'
 },
 {
@@ -35,7 +35,7 @@ const promises = [
 {
   icon: Truck,
   title: 'Nationwide delivery',
-  text: '1–2 days within Lagos, 2–4 days to every other state.'
+  text: '1–2 days within Ibadan, 2–4 days to every other state.'
 }];
 
 
@@ -85,7 +85,7 @@ export function Home() {
                 Scent that stays with you
               </h1>
               <p className="mt-4 max-w-md text-sm leading-relaxed text-ivory/85 sm:text-base">
-                Warm, long-wearing fragrance blended in Lagos for the woman who
+                Warm, long-wearing fragrance blended in Ibadan for the woman who
                 is remembered before she is seen.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
@@ -165,7 +165,7 @@ export function Home() {
             </h2>
             <p className="mt-4 text-sm leading-relaxed text-cocoa/75">
               Motun began blending oils for friends in 2019, chasing scents that
-              could hold up to Lagos heat without fading by noon. Six years and
+              could hold up to Ibadan heat without fading by noon. Six years and
               thousands of bottles later, Scent by Motun is a house built on the
               same belief: fragrance should feel personal, last all day, and
               never cost a fortune.
