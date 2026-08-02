@@ -15,7 +15,7 @@ export function Footer() {
     <footer className="bg-ink text-ivory">
       <div className="container grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <p className="font-heading text-xl">Scent by Motun</p>
+          <p className="font-heading text-xl">Scents by Motun</p>
           <p className="mt-3 text-sm leading-relaxed text-ivory/60">
             Nigerian-made and Nigerian-loved fragrance. Blended in Lagos,
             bottled in small batches, worn everywhere.
@@ -28,7 +28,7 @@ export function Footer() {
               
               <Instagram size={18} />
             </a>
-            <a href="mailto:hello@scentbymotun.ng" aria-label="Email us" className="hover:text-gold">
+            <a href="mailto:hello@scentsbymotun.ng" aria-label="Email us" className="hover:text-gold">
               <Mail size={18} />
             </a>
             <a href="tel:+2348030001122" aria-label="Call us" className="hover:text-gold">
@@ -100,7 +100,7 @@ export function Footer() {
             </p>
             <p className="flex gap-2">
               <Mail size={16} className="mt-0.5 shrink-0 text-gold" />
-              hello@scentbymotun.ng
+              hello@Scentsbymotun.ng
             </p>
           </address>
         </div>
@@ -108,7 +108,7 @@ export function Footer() {
 
       <div className="border-t border-ivory/10 py-5">
         <p className="container text-center text-xs text-ivory/50">
-          © {new Date().getFullYear()} Scent by Motun. All rights reserved.
+          © {new Date().getFullYear()} Scents by Motun. All rights reserved.
           Prices in Nigerian Naira (₦).
         </p>
       </div>

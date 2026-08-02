@@ -166,7 +166,7 @@ export function Home() {
             <p className="mt-4 text-sm leading-relaxed text-cocoa/75">
               Motun began blending oils for friends in 2019, chasing scents that
               could hold up to Ibadan heat without fading by noon. Six years and
-              thousands of bottles later, Scent by Motun is a house built on the
+              thousands of bottles later, Scents by Motun is a house built on the
               same belief: fragrance should feel personal, last all day, and
               never cost a fortune.
             </p>

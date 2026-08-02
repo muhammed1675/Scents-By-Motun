@@ -61,7 +61,7 @@ export function Header() {
 
           <Link to="/" className="flex flex-col items-center lg:items-start">
             <span className="font-heading text-xl leading-none text-ink sm:text-2xl">
-              Scent by Motun
+              Scents by Motun
             </span>
             <span className="text-[9px] font-medium uppercase tracking-widest text-chestnut">
               Ibadan · Nigeria
