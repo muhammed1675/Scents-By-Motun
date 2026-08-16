@@ -44,6 +44,13 @@ const COLLECTION_LINES = [
 'Archive'];
 
 
+function parseNoteList(value: string): string[] {
+  return value.
+  split(',').
+  map((n) => n.trim()).
+  filter(Boolean);
+}
+
 interface ProductFormProps {
   draft: ProductDraft;
   categories: Category[];
@@ -277,6 +284,48 @@ export function ProductForm({
           </div>
         </Field>
       </div>
+
+      <fieldset>
+        <legend className="mb-1 text-xs font-medium uppercase tracking-widest text-chestnut">
+          Fragrance notes
+        </legend>
+        <p className="mb-3 text-xs text-cocoa/55">
+          Separate each note with a comma. These show on the product page
+          under Top / Heart / Base notes.
+        </p>
+        <div className="grid gap-5 sm:grid-cols-3">
+          <Field label="Top notes" htmlFor="p-notes-top">
+            <TextInput
+              id="p-notes-top"
+              value={draft.notes.top.join(', ')}
+              placeholder="Bergamot, Black plum"
+              onChange={(e) =>
+              set('notes', { ...draft.notes, top: parseNoteList(e.target.value) })
+              } />
+            
+          </Field>
+          <Field label="Heart notes" htmlFor="p-notes-heart">
+            <TextInput
+              id="p-notes-heart"
+              value={draft.notes.heart.join(', ')}
+              placeholder="Rose absolute, Saffron"
+              onChange={(e) =>
+              set('notes', { ...draft.notes, heart: parseNoteList(e.target.value) })
+              } />
+            
+          </Field>
+          <Field label="Base notes" htmlFor="p-notes-base">
+            <TextInput
+              id="p-notes-base"
+              value={draft.notes.base.join(', ')}
+              placeholder="Oud, Smoked vanilla, Amber"
+              onChange={(e) =>
+              set('notes', { ...draft.notes, base: parseNoteList(e.target.value) })
+              } />
+            
+          </Field>
+        </div>
+      </fieldset>
 
       <fieldset>
         <legend className="mb-3 text-xs font-medium uppercase tracking-widest text-chestnut">

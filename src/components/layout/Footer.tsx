@@ -102,11 +102,11 @@ export function Footer() {
           <address className="mt-4 space-y-3 text-sm not-italic text-ivory/70">
             <p className="flex gap-2">
               <MapPin size={16} className="mt-0.5 shrink-0 text-gold" />
-              14b Admiralty Way, Lekki Phase 1, Lagos
+              Ibadan, Oyo, Oyo State
             </p>
             <p className="flex gap-2">
               <Phone size={16} className="mt-0.5 shrink-0 text-gold" />
-              +234 803 000 1122
+              +234 803 919 7889
             </p>
             <p className="flex gap-2">
               <Mail size={16} className="mt-0.5 shrink-0 text-gold" />

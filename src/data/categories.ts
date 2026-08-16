@@ -136,25 +136,25 @@ export const categories: Category[] = [
 export const storeLocations: StoreLocation[] = [
 {
   id: 'loc-1',
-  name: 'Scent by Motun — Lekki Flagship',
-  address: '14b Admiralty Way, Lekki Phase 1',
-  city: 'Lagos',
-  hours: 'Mon – Sat, 9:00am – 8:00pm',
-  phone: '+234 803 000 1122'
+  name: 'Scent by Motun — Ibadan Studio',
+  address: 'Ibadan, Oyo, Oyo State',
+  city: 'Ibadan',
+  hours: 'Mon – Sun, 10:00am – 9:00pm',
+  phone: '+234 803 919 7889'
 },
 {
   id: 'loc-2',
-  name: 'Scent by Motun — Ikeja Counter',
-  address: 'Shop 42, Ikeja City Mall, Alausa',
-  city: 'Lagos',
-  hours: 'Mon – Sun, 10:00am – 9:00pm',
-  phone: '+234 803 000 3344'
+  name: 'Scent by Motun — Lekki Flagship',
+  address: 'Alimi Road Ilorin',
+  city: 'Ilorin',
+  hours: 'Mon – Sat, 9:00am – 8:00pm',
+  phone: '+234 803 919 7889'
 },
 {
   id: 'loc-3',
-  name: 'Scent by Motun — Abuja Studio',
-  address: '7 Gana Street, Maitama',
-  city: 'Abuja',
+  name: 'Scent by Motun — Ibadan Studio',
+  address: 'Ibadan, Oyo, Oyo State',
+  city: 'Ibadan',
   hours: 'Mon – Fri, 10:00am – 6:00pm',
-  phone: '+234 803 000 5566'
+  phone: '+234 803 919 7889'
 }];
